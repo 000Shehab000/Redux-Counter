@@ -3,9 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="E:\STUDY\Git_Projects\Redux-Counter\style.css"
+    />
     <title>Redux Counter</title>
   </head>
-  <body></body>
-  <script src="main.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/5.0.1/redux.legacy-esm.min.js"></script>
+  <body>
+    <div>Counter: <span id="counter"></span></div>
+    <button id="increase">Increase</button>
+    <button id="decrease">Decrease</button>
+  </body>
+  <script type="module">
+    import { createStore } from 'https://cdnjs.cloudflare.com/ajax/libs/redux/5.0.1/redux.legacy-esm.min.js'
+
+    //Reducer
+    const initState = { counter: 0 }
+    const counterReducer = (state = initState, action) => {
+      if (action.type === 'increase') {
+        return { ...state, counter: state.counter + action.payload.addedNum }
+      } else if (action.type === 'decrease') {
+        return {
+          ...state,
+          counter: state.counter - action.payload.subtractedNum,
+        }
+      }
+      return state
+    }
+
+    // Store
+    const store = createStore(counterReducer)
+
+    // App Component
+    const counterApp = () => {
+      document.getElementById('counter').innerText = store.getState().counter
+    }
+    counterApp()
+    store.subscribe(counterApp)
+
+    document.getElementById('increase').addEventListener('click', () => {
+      const action = { type: 'increase', payload: { addedNum: 5 } }
+      store.dispatch(action)
+    })
+
+    document.getElementById('decrease').addEventListener('click', () => {
+      const action = { type: 'decrease', payload: { subtractedNum: 1 } }
+      store.dispatch(action)
+    })
+  </script>
 </html>
